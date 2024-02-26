@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { orthographyCheckUseCase } from './use-cases/orthography.use-case';
 import {
   AudioToTextDto,
+  ImageGenerationDto,
+  ImageVariationDto,
   OrthographyDto,
   ProsConsDiscusserDto,
   TextToAudioDto,
@@ -10,6 +12,9 @@ import {
 import OpenAI from 'openai';
 import {
   audioToTextUseCase,
+  imageGenerationGetterUseCase,
+  imageGenerationUseCase,
+  imageVariationUseCase,
   prosConsDiscusserStreamUseCase,
   prosConsDiscusserUseCase,
   textToAudioGetterUseCase,
@@ -68,5 +73,25 @@ export class GptService {
       audioFile,
       prompt,
     });
+  }
+
+  async imageGeneration({
+    prompt,
+    originalImage,
+    maskImage,
+  }: ImageGenerationDto) {
+    return await imageGenerationUseCase(this.openai, {
+      prompt,
+      originalImage,
+      maskImage,
+    });
+  }
+
+  imageGenerationGetter(fileName: string) {
+    return imageGenerationGetterUseCase(fileName);
+  }
+
+  async imageVariation(imageVariationDto: ImageVariationDto) {
+    return imageVariationUseCase(this.openai, imageVariationDto);
   }
 }
